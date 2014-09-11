@@ -26,13 +26,13 @@ namespace WebApiODataKeys.Controllers
 		//	return Ok(new Stadium { Capacity = 2300, Country = "Switzerland", Name = "Times Stadium", Owner = "FC Zug" });
 		//}
 
-		// http://localhost:60096/odata/Stadium%28Name=%27rrr%27,%20Country=%273333%27%29
+		// http://localhost:60096/odata/Stadium(Name='Baz', Country='Germany')
 		[ODataRoute("(Name={name}, Country={country})")]
 		[EnableQuery(PageSize = 20, AllowedQueryOptions = AllowedQueryOptions.All)]
 		[HttpGet]
 		public IHttpActionResult Get([FromODataUri] string name, [FromODataUri] string country)
 		{
-			return Ok(new Stadium { Capacity = 2300, Country = "Switzerland", Name = "Times Stadium", Owner = "FC Zug" });
+			return Ok(new Stadium { Capacity = 2300, Country = country, Name = name, Owner = "FC Zug" });
 		}
 
 		// http://localhost:60096/odata/Stadium/D.GetStadiumTest(test='ddd', land='ssss')
@@ -52,13 +52,14 @@ namespace WebApiODataKeys.Controllers
 			return Ok( new Stadium { Capacity = 2300, Country = "Switzerland", Name = "Times Stadium", Owner = "FC Zug" } );
 		}
 
-		//[EnableQuery(PageSize = 20, AllowedQueryOptions = AllowedQueryOptions.All)]
-		//[ODataRoute("(Name={name}, Country={country})/D.GetExtraDetailsWithFunction()")]
-		//[HttpGet]
-		//public IHttpActionResult GetExtraDetailsWithFunction(string name, string country)
-		//{
-		//	return Ok("Some extra details in a string");
-		//}
+		// http://localhost:60096/odata/Stadium(Name='Baz', Country='Germany')/D.GetCityFromStadiumWithFunction%28%29
+		[EnableQuery(PageSize = 20, AllowedQueryOptions = AllowedQueryOptions.All)]
+		[ODataRoute("(Name={name},Country={country})/D.GetCityFromStadiumWithFunction()")]
+		[HttpGet]
+		public IHttpActionResult GetCityFromStadiumWithFunction([FromODataUri] string name, [FromODataUri] string country)
+		{
+			return Ok(new City { Population = 9000000, Country = "Berlin", Id = 8 });
+		}
 
 	}
 }

@@ -47,10 +47,14 @@ namespace WebApiODataKeys
 			FunctionConfiguration getStadiumFromCityWithFunction = cities.EntityType.Function("GetStadiumsFromCityWithFunction");
 			getStadiumFromCityWithFunction.ReturnsCollectionFromEntitySet<Stadium>("Stadium");
 
+			// Per Entity composite key Stadium
+			FunctionConfiguration getCityFromStadiumWithFunction = stadiums.EntityType.Function("GetCityFromStadiumWithFunction");
+			getCityFromStadiumWithFunction.ReturnsFromEntitySet<City>("City");
+
 			// Global Function
 			builder.Function("GlobalFunction").ReturnsCollectionFromEntitySet<Stadium>("Stadium");
 
-			// TODO Per Entity composite key
+			
 			
 			return builder.GetEdmModel();
 		}
