@@ -49,7 +49,7 @@ namespace WebApiODataKeys.Controllers
 		[HttpGet]
 		public IHttpActionResult GetStadiumsWithFunction()
 		{
-			return Ok( new Stadium { Capacity = 2300, Country = "Switzerland", Name = "Times Stadium", Owner = "FC Zug" } );
+			return Ok(new List<Stadium> { new Stadium { Capacity = 2300, Country = "Switzerland", Name = "Times Stadium", Owner = "FC Zug" } });
 		}
 
 		// http://localhost:60096/odata/Stadium(Name='Baz', Country='Germany')/D.GetCityFromStadiumWithFunction()

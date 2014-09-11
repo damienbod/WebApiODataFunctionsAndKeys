@@ -20,18 +20,4 @@ namespace WebAPIODataKeys.Models
 		[DataMember]
 		public string Owner { get; set; }
     }
-
-	[DataContract(Name = "City")]
-	public class City
-	{
-		[DataMember]
-		[Key]
-		public int Id { get; set; }
-
-		[DataMember]
-		public long Population { get; set; }
-
-		[DataMember]
-		public string Country { get; set; }
-	}
 }
