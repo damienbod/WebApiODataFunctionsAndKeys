@@ -83,6 +83,12 @@
       <param name="entityType">The derived entity type for which the changes would be tracked. <paramref name="entityType" /> should be assignable to instances of <paramref name="TEntityType" />.</param>
       <param name="updatableProperties">The set of properties that can be updated or reset.</param>
     </member>
+    <member name="M:System.Web.OData.Delta`1.#ctor(System.Type,System.Collections.Generic.IEnumerable{System.String},System.Reflection.PropertyInfo)">
+      <summary>Initializes a new instance of <see cref="T:System.Web.OData.Delta`1" />.</summary>
+      <param name="entityType">The derived entity type for which the changes would be tracked. <paramref name="entityType" /> should be assignable to instances of <paramref name="TEntityType" />.</param>
+      <param name="updatableProperties">The set of properties that can be updated or reset. Unknown property names, including those of dynamic properties, are ignored.</param>
+      <param name="dynamicDictionaryPropertyInfo">The property info that is used as dictionary of dynamic properties. null means this entity type is not open.</param>
+    </member>
     <member name="M:System.Web.OData.Delta`1.Clear">
       <summary>Clears the Delta and resets the underlying Entity.</summary>
     </member>
@@ -569,6 +575,9 @@
     <member name="P:System.Web.OData.ODataQueryContext.NavigationSource">
       <summary>Gets the <see cref="T:Microsoft.OData.Edm.IEdmNavigationSource" /> that contains the element.</summary>
     </member>
+    <member name="P:System.Web.OData.ODataQueryContext.Path">
+      <summary>Gets the <see cref="T:System.Web.OData.Routing.ODataPath" />.</summary>
+    </member>
     <member name="T:System.Web.OData.ODataQueryParameterBindingAttribute">
       <summary>A <see cref="T:System.Web.Http.ParameterBindingAttribute" /> to bind parameters of type <see cref="T:System.Web.OData.Query.ODataQueryOptions" /> to the OData query from the incoming request.</summary>
     </member>
@@ -629,7 +638,7 @@
       <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
     </member>
     <member name="T:System.Web.OData.QueryableRestrictions">
-      <summary>Represents a queryable restriction on an EDM property, including nonfilterable, unsortable, not navigable, not expandable.</summary>
+      <summary>Represents a queryable restriction on an EDM property, including not filterable, not sortable, not navigable, not expandable or not countable.</summary>
     </member>
     <member name="M:System.Web.OData.QueryableRestrictions.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.OData.QueryableRestrictions" /> class.</summary>
@@ -640,18 +649,34 @@
     </member>
     <member name="P:System.Web.OData.QueryableRestrictions.NonFilterable">
       <summary>Gets or sets whether the property is nonfilterable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
+    </member>
+    <member name="P:System.Web.OData.QueryableRestrictions.NotCountable">
+      <summary>Gets or sets whether the property is not countable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="P:System.Web.OData.QueryableRestrictions.NotExpandable">
       <summary>Gets or sets whether the property is not expandable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
+    </member>
+    <member name="P:System.Web.OData.QueryableRestrictions.NotFilterable">
+      <summary>Gets or sets whether the property is not filterable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="P:System.Web.OData.QueryableRestrictions.NotNavigable">
       <summary>Gets or sets whether the property is not navigable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
+    </member>
+    <member name="P:System.Web.OData.QueryableRestrictions.NotSortable">
+      <summary>Gets or sets whether the property is not sortable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="P:System.Web.OData.QueryableRestrictions.Unsortable">
       <summary>Gets or sets whether the property is unsortable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="T:System.Web.OData.QueryableRestrictionsAnnotation">
-      <summary>Represents an annotation to add the queryable restrictions on an EDM property, including nonfilterable, unsortable, not navigable, not expandable.</summary>
+      <summary>Represents an annotation to add the queryable restrictions on an EDM property, including not filterable, not sortable, not navigable, not expandable or not countable.</summary>
     </member>
     <member name="M:System.Web.OData.QueryableRestrictionsAnnotation.#ctor(System.Web.OData.QueryableRestrictions)">
       <summary>Initializes a new instance of <see cref="T:System.Web.OData.QueryableRestrictionsAnnotation" /> class.</summary>
@@ -714,23 +739,11 @@
       <summary>Initializes a new instance of the <see cref="T:System.Web.OData.Batch.DefaultODataBatchHandler" /> class.</summary>
       <param name="httpServer">The <see cref="T:System.Web.Http.HttpServer" /> for handling the individual batch requests.</param>
     </member>
-    <member name="M:System.Web.OData.Batch.DefaultODataBatchHandler.CreateResponseMessageAsync(System.Collections.Generic.IEnumerable{System.Web.OData.Batch.ODataBatchResponseItem},System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
-      <summary>Creates the batch response message.</summary>
-      <returns>The batch response message.</returns>
-      <param name="responses">The responses for the batch requests.</param>
-      <param name="request">The original request containing all the batch requests.</param>
-      <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    </member>
     <member name="M:System.Web.OData.Batch.DefaultODataBatchHandler.ExecuteRequestMessagesAsync(System.Collections.Generic.IEnumerable{System.Web.OData.Batch.ODataBatchRequestItem},System.Threading.CancellationToken)">
       <summary>Executes the OData batch requests.</summary>
       <returns>A collection of <see cref="T:System.Web.OData.Batch.ODataBatchResponseItem" /> for the batch requests.</returns>
       <param name="requests">The collection of OData batch requests.</param>
       <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    </member>
-    <member name="M:System.Web.OData.Batch.DefaultODataBatchHandler.GetBaseUri(System.Net.Http.HttpRequestMessage)">
-      <summary>Gets the base URI for the batched requests.</summary>
-      <returns>The base URI.</returns>
-      <param name="request">The original request containing all the batch requests.</param>
     </member>
     <member name="M:System.Web.OData.Batch.DefaultODataBatchHandler.ParseBatchRequestsAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
       <summary>Converts the incoming OData batch request into a collection of request messages.</summary>
@@ -739,10 +752,6 @@
       <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     </member>
     <member name="M:System.Web.OData.Batch.DefaultODataBatchHandler.ProcessBatchAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"></member>
-    <member name="M:System.Web.OData.Batch.DefaultODataBatchHandler.ValidateRequest(System.Net.Http.HttpRequestMessage)">
-      <summary>Validates the incoming request that contains the batch request messages.</summary>
-      <param name="request">The request containing the batch request messages.</param>
-    </member>
     <member name="T:System.Web.OData.Batch.ODataBatchContent">
       <summary>Encapsulates a collection of OData batch responses.</summary>
     </member>
@@ -768,11 +777,27 @@
       <summary>Initializes a new instance of the <see cref="T:System.Web.OData.Batch.ODataBatchHandler" /> class.</summary>
       <param name="httpServer">The <see cref="T:System.Web.Http.HttpServer" /> for handling the individual batch requests.</param>
     </member>
+    <member name="M:System.Web.OData.Batch.ODataBatchHandler.CreateResponseMessageAsync(System.Collections.Generic.IEnumerable{System.Web.OData.Batch.ODataBatchResponseItem},System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+      <summary>Creates the batch response message.</summary>
+      <returns>The batch response message.</returns>
+      <param name="responses">The responses for the batch requests.</param>
+      <param name="request">The original request containing all the batch requests.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    </member>
+    <member name="M:System.Web.OData.Batch.ODataBatchHandler.GetBaseUri(System.Net.Http.HttpRequestMessage)">
+      <summary>Gets the base URI for the batched requests.</summary>
+      <returns>The base URI.</returns>
+      <param name="request">The original request containing all the batch requests.</param>
+    </member>
     <member name="P:System.Web.OData.Batch.ODataBatchHandler.MessageQuotas">
       <summary>Gets the <see cref="T:Microsoft.OData.Core.ODataMessageQuotas" /> used for reading/writing the batch request/response.</summary>
     </member>
     <member name="P:System.Web.OData.Batch.ODataBatchHandler.ODataRouteName">
       <summary>Gets or sets the name of the OData route associated with this batch handler.</summary>
+    </member>
+    <member name="M:System.Web.OData.Batch.ODataBatchHandler.ValidateRequest(System.Net.Http.HttpRequestMessage)">
+      <summary>Validates the incoming request that contains the batch request messages.</summary>
+      <param name="request">The request containing the batch request messages.</param>
     </member>
     <member name="T:System.Web.OData.Batch.ODataBatchHttpRequestMessageExtensions">
       <summary>Provides extension methods for the <see cref="T:System.Net.Http.HttpRequestMessage" /> class.</summary>
@@ -978,13 +1003,6 @@
       <summary>Initializes a new instance of the <see cref="T:System.Web.OData.Batch.UnbufferedODataBatchHandler" /> class.</summary>
       <param name="httpServer">The <see cref="T:System.Web.Http.HttpServer" /> for handling the individual batch requests.</param>
     </member>
-    <member name="M:System.Web.OData.Batch.UnbufferedODataBatchHandler.CreateResponseMessageAsync(System.Collections.Generic.IEnumerable{System.Web.OData.Batch.ODataBatchResponseItem},System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
-      <summary>Creates the batch response message.</summary>
-      <returns>The batch response message.</returns>
-      <param name="responses">The responses for the batch requests.</param>
-      <param name="request">The original request containing all the batch requests.</param>
-      <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    </member>
     <member name="M:System.Web.OData.Batch.UnbufferedODataBatchHandler.ExecuteChangeSetAsync(Microsoft.OData.Core.ODataBatchReader,System.Guid,System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
       <summary>Executes the ChangeSet.</summary>
       <returns>The response for the ChangeSet.</returns>
@@ -1001,16 +1019,7 @@
       <param name="originalRequest">The original request containing all the batch requests.</param>
       <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     </member>
-    <member name="M:System.Web.OData.Batch.UnbufferedODataBatchHandler.GetBaseUri(System.Net.Http.HttpRequestMessage)">
-      <summary>Gets the base URI for the batched requests.</summary>
-      <returns>The base URI.</returns>
-      <param name="request">The original request containing all the batch requests.</param>
-    </member>
     <member name="M:System.Web.OData.Batch.UnbufferedODataBatchHandler.ProcessBatchAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"></member>
-    <member name="M:System.Web.OData.Batch.UnbufferedODataBatchHandler.ValidateRequest(System.Net.Http.HttpRequestMessage)">
-      <summary>Validates the incoming request that contains the batch request messages.</summary>
-      <param name="request">The request containing the batch request messages.</param>
-    </member>
     <member name="T:System.Web.OData.Builder.ActionConfiguration">
       <summary>ActionConfiguration represents an OData action that you wish to expose via your service.</summary>
     </member>
@@ -1089,12 +1098,8 @@
       <param name="entitySetConfiguration">The entity set which contains the returned entity.</param>
       <typeparam name="TEntityType">The type that is an EntityType.</typeparam>
     </member>
-    <member name="M:System.Web.OData.Builder.ActionConfiguration.SetBindingParameter(System.String,System.Web.OData.Builder.IEdmTypeConfiguration,System.Boolean)">
+    <member name="M:System.Web.OData.Builder.ActionConfiguration.SetBindingParameter(System.String,System.Web.OData.Builder.IEdmTypeConfiguration)">
       <summary>Specifies the bindingParameter name, type and whether it is alwaysBindable, use only if the Action "isBindable".</summary>
-      <returns>The binding parameter of this <see cref="T:System.Web.OData.Builder.ActionConfiguration" />.</returns>
-      <param name="name">The name of the parameter.</param>
-      <param name="bindingParameterType">The binding parameter type.</param>
-      <param name="alwaysBindable">true if always bindable; otherwise, false.</param>
     </member>
     <member name="T:System.Web.OData.Builder.ActionLinkBuilder">
       <summary>ActionLinkBuilder can be used to annotate an Action. This is how formatters create links to invoke bound actions.</summary>
@@ -1122,15 +1127,10 @@
     <member name="T:System.Web.OData.Builder.BindingParameterConfiguration">
       <summary>Represents a BindingParameter.</summary>
     </member>
-    <member name="M:System.Web.OData.Builder.BindingParameterConfiguration.#ctor(System.String,System.Web.OData.Builder.IEdmTypeConfiguration,System.Boolean)">
+    <member name="M:System.Web.OData.Builder.BindingParameterConfiguration.#ctor(System.String,System.Web.OData.Builder.IEdmTypeConfiguration)">
       <summary>Create a BindingParameterConfiguration</summary>
       <param name="name">The name of the Binding Parameter</param>
       <param name="parameterType">The type of the Binding Parameter</param>
-      <param name="alwaysBindable">Whether the action can always be bound to instances of the binding parameter.</param>
-    </member>
-    <member name="P:System.Web.OData.Builder.BindingParameterConfiguration.AlwaysBindable">
-      <summary>Indicates whether the BindingParameter is always bindable or not. For example some actions are always available some are only available at certain times or in certain states.</summary>
-      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="F:System.Web.OData.Builder.BindingParameterConfiguration.DefaultBindingParameterName">
       <summary>The default parameter name for an action’s binding parameter.</summary>
@@ -1210,10 +1210,42 @@
       <param name="modelBuilder">The <see cref="T:System.Web.OData.Builder.ODataModelBuilder" /> being used.</param>
       <param name="clrType">The backing CLR type for this entity type.</param>
     </member>
+    <member name="M:System.Web.OData.Builder.ComplexTypeConfiguration.Abstract">
+      <summary>Marks this complex type as abstract.</summary>
+      <returns>Returns itself so that multiple calls can be chained.</returns>
+    </member>
+    <member name="P:System.Web.OData.Builder.ComplexTypeConfiguration.BaseType">
+      <summary>Gets or sets the base type of this complex type.</summary>
+    </member>
+    <member name="M:System.Web.OData.Builder.ComplexTypeConfiguration.DerivesFrom(System.Web.OData.Builder.ComplexTypeConfiguration)">
+      <summary>Sets the base type of this complex type.</summary>
+      <returns>Returns itself so that multiple calls can be chained.</returns>
+      <param name="baseType">The base complex type.</param>
+    </member>
+    <member name="M:System.Web.OData.Builder.ComplexTypeConfiguration.DerivesFromNothing">
+      <summary>Sets the base type of this complex type to null meaning that this complex type does not derive from anything.</summary>
+      <returns>Returns itself so that multiple calls can be chained.</returns>
+    </member>
     <member name="P:System.Web.OData.Builder.ComplexTypeConfiguration.Kind"></member>
     <member name="T:System.Web.OData.Builder.ComplexTypeConfiguration`1">
       <summary>Represents an <see cref="T:Microsoft.OData.Edm.IEdmComplexType" /> that can be built using <see cref="T:System.Web.OData.Builder.ODataModelBuilder" />.</summary>
       <typeparam name="TComplexType"></typeparam>
+    </member>
+    <member name="M:System.Web.OData.Builder.ComplexTypeConfiguration`1.Abstract">
+      <summary>Marks this complex type as abstract.</summary>
+      <returns>Returns itself so that multiple calls can be chained.</returns>
+    </member>
+    <member name="P:System.Web.OData.Builder.ComplexTypeConfiguration`1.BaseType">
+      <summary>Gets the base type of this complex type.</summary>
+    </member>
+    <member name="M:System.Web.OData.Builder.ComplexTypeConfiguration`1.DerivesFrom``1">
+      <summary>Sets the base type of this complex type.</summary>
+      <returns>Returns itself so that multiple calls can be chained.</returns>
+      <typeparam name="TBaseType">The base complex type.</typeparam>
+    </member>
+    <member name="M:System.Web.OData.Builder.ComplexTypeConfiguration`1.DerivesFromNothing">
+      <summary>Sets the base type of this complex type to null meaning that this complex type does not derive from anything.</summary>
+      <returns>Returns itself so that multiple calls can be chained.</returns>
     </member>
     <member name="T:System.Web.OData.Builder.ContainedAttribute">
       <summary>Mark a navigation property as containment.</summary>
@@ -1240,16 +1272,6 @@
     </member>
     <member name="M:System.Web.OData.Builder.EntityCollectionConfiguration`1.Function(System.String)">
       <summary>Creates a new Function that binds to Collection(EntityType).</summary>
-      <returns>A <see cref="T:System.Web.OData.Builder.FunctionConfiguration" /> to allow further configuration of the Function.</returns>
-      <param name="name">The name of the Function</param>
-    </member>
-    <member name="M:System.Web.OData.Builder.EntityCollectionConfiguration`1.TransientAction(System.String)">
-      <summary>Creates a new Action that sometimes binds to Collection(EntityType).</summary>
-      <returns>An <see cref="T:System.Web.OData.Builder.ActionConfiguration" /> to allow further configuration of the Action.</returns>
-      <param name="name">The name of the Action</param>
-    </member>
-    <member name="M:System.Web.OData.Builder.EntityCollectionConfiguration`1.TransientFunction(System.String)">
-      <summary>Creates a new Function that sometimes binds to Collection(EntityType).</summary>
       <returns>A <see cref="T:System.Web.OData.Builder.FunctionConfiguration" /> to allow further configuration of the Function.</returns>
       <param name="name">The name of the Function</param>
     </member>
@@ -1306,26 +1328,11 @@
       <summary>Marks this entity type as abstract.</summary>
       <returns>Returns itself so that multiple calls can be chained.</returns>
     </member>
-    <member name="M:System.Web.OData.Builder.EntityTypeConfiguration.AddCollectionProperty(System.Reflection.PropertyInfo)">
-      <summary>Adds a new EDM collection property to this entity type.</summary>
-      <returns>Returns the <see cref="T:System.Web.OData.Builder.CollectionPropertyConfiguration" /> of the added property.</returns>
-      <param name="propertyInfo">The backing CLR property.</param>
-    </member>
-    <member name="M:System.Web.OData.Builder.EntityTypeConfiguration.AddComplexProperty(System.Reflection.PropertyInfo)">
-      <summary>Adds a new EDM complex property to this entity type.</summary>
-      <returns>Returns the <see cref="T:System.Web.OData.Builder.ComplexPropertyConfiguration" /> of the added property.</returns>
-      <param name="propertyInfo">The backing CLR property.</param>
-    </member>
     <member name="M:System.Web.OData.Builder.EntityTypeConfiguration.AddContainedNavigationProperty(System.Reflection.PropertyInfo,Microsoft.OData.Edm.EdmMultiplicity)">
       <summary>Adds a contained EDM navigation property to this entity type.</summary>
       <returns>Returns the <see cref="T:System.Web.OData.Builder.NavigationPropertyConfiguration" /> of the added property.</returns>
       <param name="navigationProperty">The backing CLR property.</param>
       <param name="multiplicity">The <see cref="T:Microsoft.OData.Edm.EdmMultiplicity" /> of the navigation property.</param>
-    </member>
-    <member name="M:System.Web.OData.Builder.EntityTypeConfiguration.AddEnumProperty(System.Reflection.PropertyInfo)">
-      <summary>Adds a new EDM enum property to this entity type.</summary>
-      <returns>Returns the <see cref="T:System.Web.OData.Builder.EnumPropertyConfiguration" /> of the added property.</returns>
-      <param name="propertyInfo">The backing CLR property.</param>
     </member>
     <member name="M:System.Web.OData.Builder.EntityTypeConfiguration.AddNavigationProperty(System.Reflection.PropertyInfo,Microsoft.OData.Edm.EdmMultiplicity)">
       <summary>Adds a non-contained EDM navigation property to this entity type.</summary>
@@ -1333,16 +1340,8 @@
       <param name="navigationProperty">The backing CLR property.</param>
       <param name="multiplicity">The <see cref="T:Microsoft.OData.Edm.EdmMultiplicity" /> of the navigation property.</param>
     </member>
-    <member name="M:System.Web.OData.Builder.EntityTypeConfiguration.AddProperty(System.Reflection.PropertyInfo)">
-      <summary>Adds a new EDM primitive property to this entity type.</summary>
-      <returns>Returns the <see cref="T:System.Web.OData.Builder.PrimitivePropertyConfiguration" /> of the added property.</returns>
-      <param name="propertyInfo">The backing CLR property.</param>
-    </member>
     <member name="P:System.Web.OData.Builder.EntityTypeConfiguration.BaseType">
       <summary>Gets or sets the base type of this entity type.</summary>
-    </member>
-    <member name="P:System.Web.OData.Builder.EntityTypeConfiguration.BaseTypeConfigured">
-      <summary>Gets a value that represents whether the base type is explicitly configured or inferred.</summary>
     </member>
     <member name="M:System.Web.OData.Builder.EntityTypeConfiguration.DerivesFrom(System.Web.OData.Builder.EntityTypeConfiguration)">
       <summary>Sets the base type of this entity type.</summary>
@@ -1357,9 +1356,6 @@
       <summary>Configures the key property(s) for this entity type.</summary>
       <returns>Returns itself so that multiple calls can be chained.</returns>
       <param name="keyProperty">The property to be added to the key properties of this entity type.</param>
-    </member>
-    <member name="P:System.Web.OData.Builder.EntityTypeConfiguration.IsAbstract">
-      <summary>Gets or sets a value indicating whether this type is abstract.</summary>
     </member>
     <member name="P:System.Web.OData.Builder.EntityTypeConfiguration.Keys">
       <summary>Gets the collection of keys for this entity type.</summary>
@@ -1455,16 +1451,6 @@
     </member>
     <member name="P:System.Web.OData.Builder.EntityTypeConfiguration`1.NavigationProperties">
       <summary>Gets the collection of <see cref="T:System.Web.OData.Builder.NavigationPropertyConfiguration" /> of this entity type.</summary>
-    </member>
-    <member name="M:System.Web.OData.Builder.EntityTypeConfiguration`1.TransientAction(System.String)">
-      <summary>Create an Action that sometimes binds to this EntityType</summary>
-      <returns>The ActionConfiguration to allow further configuration of the new 'transient' Action.</returns>
-      <param name="name">The name of the action.</param>
-    </member>
-    <member name="M:System.Web.OData.Builder.EntityTypeConfiguration`1.TransientFunction(System.String)">
-      <summary>Create a Function that sometimes binds to this EntityType</summary>
-      <returns>The FunctionConfiguration to allow further configuration of the new 'transient' Function.</returns>
-      <param name="name">The name of the function.</param>
     </member>
     <member name="T:System.Web.OData.Builder.EnumMemberConfiguration">
       <summary>Represents the configuration for an enum member of an enum type.</summary>
@@ -1661,9 +1647,8 @@
       <param name="entitySetName">The entitySetName which contains the return EntityType instance</param>
       <typeparam name="TEntityType">The type that is an EntityType</typeparam>
     </member>
-    <member name="M:System.Web.OData.Builder.FunctionConfiguration.SetBindingParameter(System.String,System.Web.OData.Builder.IEdmTypeConfiguration,System.Boolean)">
+    <member name="M:System.Web.OData.Builder.FunctionConfiguration.SetBindingParameter(System.String,System.Web.OData.Builder.IEdmTypeConfiguration)">
       <summary>Specifies the bindingParameter name, type and whether it is alwaysBindable, use only if the Function "isBindable".</summary>
-      <returns>Returns <see cref="T:System.Web.OData.Builder.FunctionConfiguration" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.FunctionConfiguration.SupportedInFilter">
       <summary>Gets and sets a value indicating whether the function is supported in $filter.</summary>
@@ -2557,10 +2542,6 @@
       <summary>The FullyQualifiedName is the ContainerQualifiedName further qualified using the Namespace. Typically this is not required, because most services have at most one container with the same name.</summary>
       <returns>Returns <see cref="T:System.String" />.</returns>
     </member>
-    <member name="P:System.Web.OData.Builder.ProcedureConfiguration.IsAlwaysBindable">
-      <summary>If the procedure IsBindable is it Always bindable.</summary>
-      <returns>Returns <see cref="T:System.Boolean" />.</returns>
-    </member>
     <member name="P:System.Web.OData.Builder.ProcedureConfiguration.IsBindable">
       <summary>Can the procedure be bound to a url representing the BindingParameter.</summary>
       <returns>Returns <see cref="T:System.Boolean" />.</returns>
@@ -2632,60 +2613,107 @@
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.AddedExplicitly">
       <summary>Gets or sets a value that is <see cref="true" /> if the property was added by the user; <see cref="false" /> if it was inferred through conventions.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.DeclaringType">
       <summary>Gets the declaring type.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.StructuralTypeConfiguration" />.</returns>
+    </member>
+    <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsCountable">
+      <summary>Sets the property as countable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
     </member>
     <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsExpandable">
       <summary>Sets the property as expandable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
     </member>
     <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsFilterable">
       <summary>Sets the property as filterable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
     </member>
     <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsNavigable">
       <summary>Sets the property as navigable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
     </member>
     <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsNonFilterable">
       <summary>Sets the property as nonfilterable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
+    </member>
+    <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsNotCountable">
+      <summary>Sets the property as not countable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
     </member>
     <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsNotExpandable">
       <summary>Sets the property as not expandable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
+    </member>
+    <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsNotFilterable">
+      <summary>Sets the property as not filterable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
     </member>
     <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsNotNavigable">
       <summary>Sets the property as not navigable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
+    </member>
+    <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsNotSortable">
+      <summary>Sets the property as not sortable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.IsRestricted">
-      <summary>Gets whether the property is restricted, i.e. nonfilterable, unsortable, not navigable, or not expandable.</summary>
+      <summary>Gets whether the property is restricted, i.e. not filterable, not sortable, not navigable, not expandable, or not countable.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsSortable">
       <summary>Sets the property as sortable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
     </member>
     <member name="M:System.Web.OData.Builder.PropertyConfiguration.IsUnsortable">
       <summary>Sets the property as unsortable.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyConfiguration" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.Kind">
       <summary>Gets the <see cref="T:System.Web.OData.Builder.PropertyKind" /> of the property.</summary>
+      <returns>Returns <see cref="T:System.Web.OData.Builder.PropertyKind" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.Name">
       <summary>Gets or sets the name of the property.</summary>
+      <returns>Returns <see cref="T:System.String" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.NonFilterable">
       <summary>Gets or sets whether the property is nonfilterable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
+    </member>
+    <member name="P:System.Web.OData.Builder.PropertyConfiguration.NotCountable">
+      <summary>Gets or sets whether the property is not countable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.NotExpandable">
       <summary>Gets or sets whether the property is not expandable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
+    </member>
+    <member name="P:System.Web.OData.Builder.PropertyConfiguration.NotFilterable">
+      <summary>Gets or sets whether the property is not filterable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.NotNavigable">
       <summary>Gets or sets whether the property is not navigable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
+    </member>
+    <member name="P:System.Web.OData.Builder.PropertyConfiguration.NotSortable">
+      <summary>Gets or sets whether the property is not sortable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.PropertyInfo">
       <summary>Gets the mapping CLR <see cref="P:System.Web.OData.Builder.PropertyConfiguration.PropertyInfo" />.</summary>
+      <returns>Returns <see cref="T:System.Reflection.PropertyInfo" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.RelatedClrType">
       <summary>Gets the CLR <see cref="T:System.Type" /> of the property.</summary>
+      <returns>Returns <see cref="T:System.Type" />.</returns>
     </member>
     <member name="P:System.Web.OData.Builder.PropertyConfiguration.Unsortable">
       <summary>Gets or sets whether the property is unsortable. default is false.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="T:System.Web.OData.Builder.PropertyKind">
       <summary>The kind of the EDM property.</summary>
@@ -2801,6 +2829,12 @@
       <returns>The <see cref="T:System.Web.OData.Builder.PrimitivePropertyConfiguration" /> so that the property can be configured further.</returns>
       <param name="propertyInfo">The property being added.</param>
     </member>
+    <member name="P:System.Web.OData.Builder.StructuralTypeConfiguration.BaseTypeConfigured">
+      <summary>Gets a value that represents whether the base type is explicitly configured or inferred.</summary>
+    </member>
+    <member name="P:System.Web.OData.Builder.StructuralTypeConfiguration.BaseTypeInternal">
+      <summary>Gets the base type of this structural type.</summary>
+    </member>
     <member name="P:System.Web.OData.Builder.StructuralTypeConfiguration.ClrType">
       <summary>Gets the backing CLR <see cref="T:System.Type" />.</summary>
     </member>
@@ -2815,6 +2849,9 @@
     </member>
     <member name="P:System.Web.OData.Builder.StructuralTypeConfiguration.IgnoredProperties">
       <summary>Gets the properties from the backing CLR type that are to be ignored on this edm type.</summary>
+    </member>
+    <member name="P:System.Web.OData.Builder.StructuralTypeConfiguration.IsAbstract">
+      <summary>Gets or sets a value indicating whether this type is abstract.</summary>
     </member>
     <member name="P:System.Web.OData.Builder.StructuralTypeConfiguration.IsOpen">
       <summary>Gets a value indicating whether this type is open or not.</summary>
@@ -3111,6 +3148,9 @@
     <member name="P:System.Web.OData.Formatter.ETag.EntityType">
       <summary>Gets or sets an entity type of the ETag.</summary>
     </member>
+    <member name="P:System.Web.OData.Formatter.ETag.IsAny">
+      <summary>Gets or sets whether the ETag is corresponding to "*".</summary>
+    </member>
     <member name="P:System.Web.OData.Formatter.ETag.IsWellFormed">
       <summary>Gets or sets whether the ETag is well-formed.</summary>
     </member>
@@ -3156,6 +3196,13 @@
       <summary>Initializes a new instance of the <see cref="T:System.Web.OData.Formatter.ODataBinaryValueMediaTypeMapping" /> class.</summary>
     </member>
     <member name="M:System.Web.OData.Formatter.ODataBinaryValueMediaTypeMapping.IsMatch(System.Web.OData.Routing.PropertyAccessPathSegment)"></member>
+    <member name="T:System.Web.OData.Formatter.ODataCountMediaTypeMapping">
+      <summary>Media type mapping that associates requests with $count.</summary>
+    </member>
+    <member name="M:System.Web.OData.Formatter.ODataCountMediaTypeMapping.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.OData.Formatter.ODataCountMediaTypeMapping" /> class.</summary>
+    </member>
+    <member name="M:System.Web.OData.Formatter.ODataCountMediaTypeMapping.TryMatchMediaType(System.Net.Http.HttpRequestMessage)"></member>
     <member name="T:System.Web.OData.Formatter.ODataEnumValueMediaTypeMapping">
       <summary>Media type mapping that associates requests for the raw value of enum properties with the text/plain content type.</summary>
     </member>
@@ -3884,6 +3931,9 @@
     <member name="P:System.Web.OData.Formatter.Serialization.SelectExpandNode.ExpandedNavigationProperties">
       <summary>Gets the list of EDM navigation properties to be expanded in the response.</summary>
     </member>
+    <member name="P:System.Web.OData.Formatter.Serialization.SelectExpandNode.SelectAllDynamicProperties">
+      <summary>Gets the flag to indicate the dynamic property to be included in the response or not.</summary>
+    </member>
     <member name="P:System.Web.OData.Formatter.Serialization.SelectExpandNode.SelectedActions">
       <summary>Gets the list of OData actions to be included in the response.</summary>
     </member>
@@ -4123,6 +4173,13 @@
     <member name="P:System.Web.OData.Query.CountQueryOption.RawValue">
       <summary>Gets the raw $count value.</summary>
     </member>
+    <member name="M:System.Web.OData.Query.CountQueryOption.Validate(System.Web.OData.Query.ODataValidationSettings)">
+      <summary>Validate the count query based on the given <paramref name="validationSettings" />. It throws an ODataException if validation failed.</summary>
+      <param name="validationSettings">The <see cref="T:System.Web.OData.Query.ODataValidationSettings" /> instance which contains all the validation settings.</param>
+    </member>
+    <member name="P:System.Web.OData.Query.CountQueryOption.Validator">
+      <summary>Gets or sets the $count query validator.</summary>
+    </member>
     <member name="P:System.Web.OData.Query.CountQueryOption.Value">
       <summary>Gets the value of the $count in a parsed form.</summary>
     </member>
@@ -4209,14 +4266,26 @@
       <summary>Represents an <see cref="T:System.Attribute" /> that can be placed on a property to specify that the property cannot be used in the $filter OData query option.</summary>
     </member>
     <member name="M:System.Web.OData.Query.NonFilterableAttribute.#ctor"></member>
+    <member name="T:System.Web.OData.Query.NotCountableAttribute">
+      <summary>Represents an <see cref="T:System.Attribute" /> that can be placed on a property to specify that the $count cannot be applied on the property.</summary>
+    </member>
+    <member name="M:System.Web.OData.Query.NotCountableAttribute.#ctor"></member>
     <member name="T:System.Web.OData.Query.NotExpandableAttribute">
       <summary>Represents an <see cref="T:System.Attribute" /> that can be placed on a property to specify that the property cannot be used in the $expand OData query option.</summary>
     </member>
     <member name="M:System.Web.OData.Query.NotExpandableAttribute.#ctor"></member>
+    <member name="T:System.Web.OData.Query.NotFilterableAttribute">
+      <summary>Represents an attribute that can be placed on a property to specify that the property cannot be used in the $filter OData query option.</summary>
+    </member>
+    <member name="M:System.Web.OData.Query.NotFilterableAttribute.#ctor"></member>
     <member name="T:System.Web.OData.Query.NotNavigableAttribute">
       <summary>Represents an <see cref="T:System.Attribute" /> that can be placed on a property to specify that the property cannot be navigated in OData query.</summary>
     </member>
     <member name="M:System.Web.OData.Query.NotNavigableAttribute.#ctor"></member>
+    <member name="T:System.Web.OData.Query.NotSortableAttribute">
+      <summary>Represents an attribute that can be placed on a property to specify that the property cannot be used in the $orderby OData query option.</summary>
+    </member>
+    <member name="M:System.Web.OData.Query.NotSortableAttribute.#ctor"></member>
     <member name="T:System.Web.OData.Query.ODataQueryOptions">
       <summary>This defines a composite OData query options that can be used to perform query composition. Currently this only supports $filter, $orderby, $top, $skip, and $count.</summary>
     </member>
@@ -4681,6 +4750,9 @@
     <member name="P:System.Web.OData.Query.SelectExpandQueryOption.Context">
       <summary>Gets the given <see cref="T:System.Web.OData.ODataQueryContext" />.</summary>
     </member>
+    <member name="P:System.Web.OData.Query.SelectExpandQueryOption.LevelsMaxLiteralExpansionDepth">
+      <summary>Gets or sets the number of levels that a top level $expand=NavigationProperty($levels=max) will be expanded. This value will decrease by one with each nesting level in the $expand clause. For example, with a property value 5, the following query $expand=A($expand=B($expand=C($levels=max))) will be interpreted as $expand=A($expand=B($expand=C($levels=3))). If the query gets validated, the MaxExpansionDepth value must be greater than or equal to this value.</summary>
+    </member>
     <member name="P:System.Web.OData.Query.SelectExpandQueryOption.RawExpand">
       <summary>Gets the raw $expand value.</summary>
     </member>
@@ -4793,6 +4865,15 @@
       <summary>Represents an <see cref="T:System.Attribute" /> that can be placed on a property to specify that the property cannot be used in the $orderby OData query option.</summary>
     </member>
     <member name="M:System.Web.OData.Query.UnsortableAttribute.#ctor"></member>
+    <member name="T:System.Web.OData.Query.Validators.CountQueryValidator">
+      <summary>Represents a validator used to validate a <see cref="T:System.Web.OData.Query.CountQueryOption" /> based on the <see cref="T:System.Web.OData.Query.ODataValidationSettings" />.</summary>
+    </member>
+    <member name="M:System.Web.OData.Query.Validators.CountQueryValidator.#ctor"></member>
+    <member name="M:System.Web.OData.Query.Validators.CountQueryValidator.Validate(System.Web.OData.Query.CountQueryOption,System.Web.OData.Query.ODataValidationSettings)">
+      <summary>Validates a <see cref="T:System.Web.OData.Query.CountQueryOption" />.</summary>
+      <param name="countQueryOption">The $count query.</param>
+      <param name="validationSettings">The validation settings.</param>
+    </member>
     <member name="T:System.Web.OData.Query.Validators.FilterQueryValidator">
       <summary>Represents a validator used to validate a <see cref="T:System.Web.OData.Query.FilterQueryOption" /> based on the <see cref="T:System.Web.OData.Query.ODataValidationSettings" />.</summary>
     </member>
@@ -4896,7 +4977,7 @@
       <param name="validationSettings">The validation settings.</param>
     </member>
     <member name="T:System.Web.OData.Results.CreatedODataResult`1">
-      <summary>Represents an action result that is a response to a POST operation with an entity to an entity set.</summary>
+      <summary>Represents an action result that is a response to a create operation that adds an entity to an entity set.</summary>
       <typeparam name="T">The entity type.</typeparam>
     </member>
     <member name="M:System.Web.OData.Results.CreatedODataResult`1.#ctor(`0,System.Net.Http.Formatting.IContentNegotiator,System.Net.Http.HttpRequestMessage,System.Collections.Generic.IEnumerable{System.Net.Http.Formatting.MediaTypeFormatter},System.Uri)">
@@ -4977,6 +5058,11 @@
     <member name="M:System.Web.OData.Routing.BatchPathSegment.TryMatch(System.Web.OData.Routing.ODataPathSegment,System.Collections.Generic.IDictionary{System.String,System.Object})"></member>
     <member name="T:System.Web.OData.Routing.BoundActionPathSegment">
       <summary>An <see cref="T:System.Web.OData.Routing.ODataPathSegment" /> implementation representing a bound action invocation.</summary>
+    </member>
+    <member name="M:System.Web.OData.Routing.BoundActionPathSegment.#ctor(Microsoft.OData.Edm.IEdmAction,Microsoft.OData.Edm.IEdmModel)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.OData.Routing.BoundActionPathSegment" /> class.</summary>
+      <param name="action">The action being invoked.</param>
+      <param name="model">The edm model containing the action.</param>
     </member>
     <member name="P:System.Web.OData.Routing.BoundActionPathSegment.Action">
       <summary>Gets the action being invoked.</summary>
@@ -5069,6 +5155,51 @@
       <returns>A <see cref="T:System.String" /> that represents this instance.</returns>
     </member>
     <member name="M:System.Web.OData.Routing.CastPathSegment.TryMatch(System.Web.OData.Routing.ODataPathSegment,System.Collections.Generic.IDictionary{System.String,System.Object})"></member>
+    <member name="T:System.Web.OData.Routing.ComplexCastPathSegment">
+      <summary>An <see cref="T:System.Web.OData.Routing.ODataPathSegment" /> implementation representing a complex type cast.</summary>
+    </member>
+    <member name="M:System.Web.OData.Routing.ComplexCastPathSegment.#ctor(Microsoft.OData.Edm.IEdmComplexType)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.OData.Routing.ComplexCastPathSegment" /> class.</summary>
+      <param name="castType">The type of the cast.</param>
+    </member>
+    <member name="M:System.Web.OData.Routing.ComplexCastPathSegment.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.OData.Routing.ComplexCastPathSegment" /> class.</summary>
+      <param name="castTypeName">Name of the cast type.</param>
+    </member>
+    <member name="P:System.Web.OData.Routing.ComplexCastPathSegment.CastType">
+      <summary>Gets the type of the cast.</summary>
+    </member>
+    <member name="P:System.Web.OData.Routing.ComplexCastPathSegment.CastTypeName">
+      <summary>Gets the name of the cast type.</summary>
+    </member>
+    <member name="M:System.Web.OData.Routing.ComplexCastPathSegment.GetEdmType(Microsoft.OData.Edm.IEdmType)">
+      <summary>Gets the EDM type for this segment.</summary>
+      <returns>The EDM type for this segment.</returns>
+      <param name="previousEdmType">The EDM type of the previous path segment.</param>
+    </member>
+    <member name="M:System.Web.OData.Routing.ComplexCastPathSegment.GetNavigationSource(Microsoft.OData.Edm.IEdmNavigationSource)"></member>
+    <member name="P:System.Web.OData.Routing.ComplexCastPathSegment.SegmentKind">
+      <summary>Gets the segment kind for the current segment.</summary>
+    </member>
+    <member name="M:System.Web.OData.Routing.ComplexCastPathSegment.ToString">
+      <summary>Returns a <see cref="T:System.String" /> that represents this instance.</summary>
+      <returns>A <see cref="T:System.String" /> that represents this instance.</returns>
+    </member>
+    <member name="M:System.Web.OData.Routing.ComplexCastPathSegment.TryMatch(System.Web.OData.Routing.ODataPathSegment,System.Collections.Generic.IDictionary{System.String,System.Object})"></member>
+    <member name="T:System.Web.OData.Routing.CountPathSegment">
+      <summary>An <see cref="T:System.Web.OData.Routing.ODataPathSegment" /> implementation representing a $count segment.</summary>
+    </member>
+    <member name="M:System.Web.OData.Routing.CountPathSegment.#ctor"></member>
+    <member name="M:System.Web.OData.Routing.CountPathSegment.GetEdmType(Microsoft.OData.Edm.IEdmType)"></member>
+    <member name="M:System.Web.OData.Routing.CountPathSegment.GetNavigationSource(Microsoft.OData.Edm.IEdmNavigationSource)"></member>
+    <member name="P:System.Web.OData.Routing.CountPathSegment.SegmentKind">
+      <summary>Gets the segment kind for the current segment.</summary>
+    </member>
+    <member name="M:System.Web.OData.Routing.CountPathSegment.ToString">
+      <summary>Returns a <see cref="T:System.String" /> that represents this instance.</summary>
+      <returns>A <see cref="T:System.String" /> that represents this instance.</returns>
+    </member>
+    <member name="M:System.Web.OData.Routing.CountPathSegment.TryMatch(System.Web.OData.Routing.ODataPathSegment,System.Collections.Generic.IDictionary{System.String,System.Object})"></member>
     <member name="T:System.Web.OData.Routing.DefaultODataPathHandler">
       <summary>Parses an OData path as an <see cref="T:System.Web.OData.Routing.ODataPath" /> and converts an <see cref="T:System.Web.OData.Routing.ODataPath" /> into an OData link.</summary>
     </member>
@@ -5454,6 +5585,12 @@
     </member>
     <member name="F:System.Web.OData.Routing.ODataSegmentKinds.Cast">
       <summary>Represents a segment indicating a type cast.</summary>
+    </member>
+    <member name="F:System.Web.OData.Routing.ODataSegmentKinds.ComplexCast">
+      <summary>Represents a segment indicating a complex type cast.</summary>
+    </member>
+    <member name="F:System.Web.OData.Routing.ODataSegmentKinds.Count">
+      <summary>Represents the OData $count segment.</summary>
     </member>
     <member name="F:System.Web.OData.Routing.ODataSegmentKinds.EntitySet">
       <summary>Represents a segment indicating an entity set.</summary>

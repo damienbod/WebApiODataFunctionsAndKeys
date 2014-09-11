@@ -52,7 +52,7 @@ namespace WebApiODataKeys.Controllers
 			return Ok( new Stadium { Capacity = 2300, Country = "Switzerland", Name = "Times Stadium", Owner = "FC Zug" } );
 		}
 
-		// http://localhost:60096/odata/Stadium(Name='Baz', Country='Germany')/D.GetCityFromStadiumWithFunction%28%29
+		// http://localhost:60096/odata/Stadium(Name='Baz', Country='Germany')/D.GetCityFromStadiumWithFunction()
 		[EnableQuery(PageSize = 20, AllowedQueryOptions = AllowedQueryOptions.All)]
 		[ODataRoute("(Name={name},Country={country})/D.GetCityFromStadiumWithFunction()")]
 		[HttpGet]
