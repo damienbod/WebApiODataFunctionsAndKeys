@@ -35,7 +35,7 @@ namespace WebApiODataKeys.Controllers
 			return Ok(new Stadium { Capacity = 2300, Country = country, Name = name, Owner = "FC Zug" });
 		}
 
-		// http://localhost:60096/odata/Stadium/D.GetStadiumTest(test='ddd', land='ssss')
+		// http://localhost:60096/odata/Stadium/D.GetStadiumTest(test='ddd', name='ssss')
 		[ODataRoute("D.GetStadiumTest(test={test}, name={name})")]
 		[EnableQuery(PageSize = 20, AllowedQueryOptions = AllowedQueryOptions.All)]
 		[HttpGet]
